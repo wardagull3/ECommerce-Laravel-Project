@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('customer'); // Default role is customer
+            $table->string('role')->default('customer'); 
         });
     }
 

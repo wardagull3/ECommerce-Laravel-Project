@@ -1,3 +1,19 @@
-title,description,price,stock_status,sku,images
-Product 1,This is a great product.,29.99,In Stock,SKU001,rose.jpg
-Product 2,Another fantastic product.,49.99,Out of Stock,SKU002,girldp.jpg
+title,description,price,stock_status,sku
+Product 1,This is a great product.,29.99,In Stock,SKU0011\
+Product 2,Another fantastic product.,49.99,Out of Stock,SKU0f022
+Product 1,This is a great product.,29.99,In Stock,SKU;0013\
+Product 2,Another fantastic product.,49.99,Out of Stock,SKUag00234
+Product 1,This is a great product.,29.99,In Stock,SKU0a015\
+Product 2,Another fantastic product.,49.99,Out of Stock,SK3U0026
+Product 1,This is a great product.,29.99,In Stock,SKU0r017\
+Product 2,Another fantastic product.,49.99,Out of Stock,SKU5250028
+Product 1,This is a great product.,29.99,In Stock,SrKU0019\
+Product 2,Another fantastic product.,49.99,Out of Stock,1SKUgtts002
+Product 1,This is a great product.,29.99,In Stock,2SKUe2001\
+Product 2,Another fantastic product.,49.99,Out of Stock,3SKsggU002
+Product 1,This is a great product.,29.99,In Stock,4SK2U001\
+Product 2,Another fantastic product.,49.99,Out of Stock,5SKUg00g2
+Product 1,This is a great product.,29.99,In Stock,6SKU2001\
+Product 2,Another fantastic product.,49.99,Out of Stock,7SggKU002
+Product 1,This is a great product.,29.99,In Stock,8SKUr001\
+Product 2,Another fantastic product.,49.99,Out of Stock,9SKUg002

@@ -1,4 +1,3 @@
-<!-- resources/views/customer/checkout/payment.blade.php -->
 
 
 <?php $__env->startSection('content'); ?>
@@ -16,7 +15,6 @@
             </div>
         </div>
 
-        <!-- Card Information Fields (hidden by default) -->
         <div id="card-info" style="display: none; margin-top: 15px;">
             <div class="form-group">
                 <label for="card_number">Card Number</label>
@@ -46,5 +44,4 @@
     }
 </script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\ecommerce_app\resources\views/customer/checkout/payment.blade.php ENDPATH**/ ?>

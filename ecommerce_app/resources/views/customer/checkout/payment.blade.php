@@ -1,7 +1,19 @@
-<!-- resources/views/customer/checkout/payment.blade.php -->
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="container">
     <h2>Payment Details</h2>
     <form action="{{ route('customer.checkout.review') }}" method="POST">
@@ -16,7 +28,6 @@
             </div>
         </div>
 
-        <!-- Card Information Fields (hidden by default) -->
         <div id="card-info" style="display: none; margin-top: 15px;">
             <div class="form-group">
                 <label for="card_number">Card Number</label>

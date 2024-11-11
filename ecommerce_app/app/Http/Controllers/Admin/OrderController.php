@@ -9,14 +9,14 @@ use App\Notifications\OrderNotification;
 
 class OrderController extends Controller
 {
-    // Display all orders
+   
     public function index()
     {
-        $orders = Order::with('user')->get(); // Retrieve all orders
+        $orders = Order::with('user')->get(); 
         return view('admin.orders.index', compact('orders'));
     }
 
-    // Update the status of an order
+
     public function updateStatus(Request $request, Order $order)
 {
     $request->validate([
@@ -26,7 +26,6 @@ class OrderController extends Controller
     $order->status = $request->status;
     $order->save();
 
-    // Send notification based on the updated status
     if ($order->status === 'Pending') {
         $order->user->notify(new OrderNotification($order, 'placed'));
     } elseif ($order->status === 'Shipped') {

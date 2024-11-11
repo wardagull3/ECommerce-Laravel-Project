@@ -1,7 +1,19 @@
-<!-- resources/views/customer/cart.blade.php -->
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="container">
     <h1>Your Cart</h1>
     <table class="table">
@@ -68,7 +80,6 @@
             ? ($item->product->price - ($item->product->price * ($item->product->discount_percentage / 100))) * $item->quantity
             : $item->product->price * $item->quantity
     ), 2) }}</h4>
-    <!-- Button for confirming order -->
     <a href="{{ route('customer.checkout.shipping') }}" class="btn btn-primary">Confirm Order</a>
 </div>
 

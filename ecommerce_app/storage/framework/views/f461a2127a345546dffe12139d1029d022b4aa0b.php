@@ -1,7 +1,21 @@
-<!-- resources/views/customer/cart.blade.php -->
 
 
 <?php $__env->startSection('content'); ?>
+
+<?php if(session('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo e(session('error')); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(session('success')): ?>
+    <div class="alert alert-success">
+        <?php echo e(session('success')); ?>
+
+    </div>
+<?php endif; ?>
+
 <div class="container">
     <h1>Your Cart</h1>
     <table class="table">
@@ -68,7 +82,6 @@
             ? ($item->product->price - ($item->product->price * ($item->product->discount_percentage / 100))) * $item->quantity
             : $item->product->price * $item->quantity
     ), 2)); ?></h4>
-    <!-- Button for confirming order -->
     <a href="<?php echo e(route('customer.checkout.shipping')); ?>" class="btn btn-primary">Confirm Order</a>
 </div>
 

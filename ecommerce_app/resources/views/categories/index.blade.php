@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <h1 class="mt-4 mb-4">Category List</h1>
 
 <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Add New Category</a>

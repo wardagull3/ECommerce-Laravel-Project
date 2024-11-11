@@ -1,4 +1,3 @@
-<!-- resources/views/customer/checkout/review.blade.php -->
 
 
 <?php $__env->startSection('content'); ?>
@@ -15,10 +14,10 @@
 
     <h4>Cart Items</h4>
     <?php $__currentLoopData = $cartItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <div>
-            <?php echo e($item->product->title); ?> - Quantity: <?php echo e($item->quantity); ?> - Price: $<?php echo e($item->product->price * $item->quantity); ?>
+    <div>
+        <?php echo e($item->product->title); ?> - Quantity: <?php echo e($item->quantity); ?> - Price: $<?php echo e($item->product->price * $item->quantity); ?>
 
-        </div>
+    </div>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     <p>Total: $<?php echo e(number_format($totalPrice, 2)); ?></p>
 
@@ -29,5 +28,4 @@
 </div>
 
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\ecommerce_app\resources\views/customer/checkout/review.blade.php ENDPATH**/ ?>

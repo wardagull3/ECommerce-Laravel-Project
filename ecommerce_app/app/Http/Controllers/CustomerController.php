@@ -10,7 +10,6 @@ class CustomerController extends Controller
 {
     public function orderHistory()
     {
-        // Fetch the authenticated user's orders with related order items
         $orders = Auth::user()->orders()->with('orderItems.product')->get();
         return view('customer.orders.index', compact('orders'));
     }

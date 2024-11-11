@@ -1,10 +1,39 @@
-<!-- resources/views/customer/index.blade.php -->
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+    .image-box {
+        max-height: 150px;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .image-box img {
+        width: 48%;
+        margin: 2px;
+        border-radius: 4px;
+    }
+</style>
+
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="container">
 
-    <h1>Available Products</h1>
+    <h1 class="mb-4">Available Products</h1>
+
     <form action="{{ route('customer.search') }}" method="GET" class="mb-4">
         <div class="input-group">
             <input type="text" class="form-control" name="query" placeholder="Search by name, category, or keyword">
@@ -12,10 +41,8 @@
         </div>
     </form>
 
-    <!-- Filters Form -->
     <form action="{{ route('customer.filter') }}" method="GET" class="mb-4">
-        <div class="form-row">
-            <!-- Category Filter -->
+        <div class="row">
             <div class="col-md-4">
                 <select class="form-control" name="category">
                     <option value="">Select Category</option>
@@ -26,8 +53,6 @@
                     @endforeach
                 </select>
             </div>
-
-            <!-- Price Filter -->
             <div class="col-md-4">
                 <select class="form-control" name="price">
                     <option value="">Select Price Range</option>
@@ -37,20 +62,21 @@
                     <option value="4" {{ request('price') == '4' ? 'selected' : '' }}>$200+</option>
                 </select>
             </div>
-
-            <div class="col-md-4">
-                <button class="btn btn-primary mt-4" type="submit">Filter</button>
+            <div class="col-md-4 d-grid">
+                <button class="btn btn-primary" type="submit">Filter</button>
             </div>
         </div>
     </form>
-    <form method="GET" action="{{ route('customer.sort') }}">
-        <label for="sort">Sort by Price</label>
-        <select name="sort" id="sort">
-            <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Low to High</option>
-            <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>High to Low</option>
-        </select>
 
-        <button type="submit">Sort</button>
+    <form method="GET" action="{{ route('customer.sort') }}" class="mb-4">
+        <div class="form-group">
+            <label for="sort">Sort by Price</label>
+            <select name="sort" id="sort" class="form-control w-25">
+                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>Low to High</option>
+                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>High to Low</option>
+            </select>
+            <button type="submit" class="btn btn-primary mt-2">Sort</button>
+        </div>
     </form>
 
     <div class="row">
@@ -58,20 +84,24 @@
         <div class="col-md-4">
             <div class="card mb-4">
                 @if ($product->images)
-                @foreach (json_decode($product->images) as $image)
-                <img src="{{ asset('storage/images/'.$image) }}" width="100" class="mb-2">
-                @endforeach
+                <div class="image-box mb-3">
+                    @foreach (json_decode($product->images) as $image)
+                    <img src="{{ asset('storage/images/'.$image) }}" class="img-thumbnail" alt="Product Image">
+                    @endforeach
+                </div>
                 @endif
 
                 <div class="card-body">
                     <h5 class="card-title">{{ $product->title }}</h5>
                     <p class="card-text">{{ $product->description }}</p>
                     <p class="card-text">Price: ${{ $product->price }}</p>
-                    <p class="card-text">Stock Status: @if ($product->latestVariant() && $product->latestVariant()->stock_level > 0)
+                    <p class="card-text">Stock Status:
+                        @if ($product->latestVariant() && $product->latestVariant()->stock_level > 0)
                         In Stock
                         @else
                         Out of Stock
-                        @endif</p>
+                        @endif
+                    </p>
 
                     @if ($product->is_on_sale && $product->discount_percentage > 0)
                     @php
@@ -82,12 +112,11 @@
                         @php
                         $discountedPrice = $product->price - ($product->price * ($product->discount_percentage / 100));
                         @endphp
-                        <p style="color: red;">Sale Price: ${{ number_format($discountedPrice, 2) }}</p>
+                        <p class="text-danger">Sale Price: ${{ number_format($discountedPrice, 2) }}</p>
                         <p><strong>{{ $product->discount_percentage }}% off</strong></p>
                         @endif
                         @endif
 
-                        <!-- Only show the Add to Cart button if the stock status is 'In Stock' -->
                         @if ($product->latestVariant() && $product->latestVariant()->stock_level > 0)
                         <form action="{{ route('cart.add', $product->id) }}" method="POST">
                             @csrf
@@ -98,6 +127,27 @@
             </div>
         </div>
         @endforeach
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                @if ($products->previousPageUrl())
+                <li class="page-item">
+                    <a href="{{ $products->previousPageUrl() }}" class="page-link">Previous</a>
+                </li>
+                @endif
+
+                @if ($products->hasMorePages())
+                <li class="page-item">
+                    <a href="{{ $products->nextPageUrl() }}" class="page-link">Next</a>
+                </li>
+                @endif
+            </ul>
+        </nav>
     </div>
 </div>
 

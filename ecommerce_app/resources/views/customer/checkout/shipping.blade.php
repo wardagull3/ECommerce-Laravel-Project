@@ -1,7 +1,19 @@
-<!-- resources/views/customer/checkout/shipping.blade.php -->
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="container">
     <h2>Shipping Details</h2>
     <form action="{{ route('customer.checkout.payment') }}" method="POST">

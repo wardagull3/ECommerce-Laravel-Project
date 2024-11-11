@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->boolean('is_on_sale')->default(false);
-            $table->decimal('discount_percentage', 5, 2)->nullable(); // For example, 50.00 for 50%
+            $table->decimal('discount_percentage', 5, 2)->nullable(); 
         });
     }
 

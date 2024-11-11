@@ -21,7 +21,6 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // Only admins can access these routes
     public function __construct()
     {
         $this->middleware('admin');
@@ -29,7 +28,10 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::with('variants')->get();
+       
+        $products = Product::with('variants') 
+                       ->orderBy('id')    
+                       ->cursorPaginate(10);
 
         return view('products.index', compact('products'));
     }
@@ -59,7 +61,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'sku' => 'required|unique:products',
             'stock_status' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image',
             'categories' => 'required|array',
             'is_on_sale' => 'boolean',
             'discount_percentage' => 'nullable|numeric|min:0|max:100',
@@ -68,16 +70,14 @@ class ProductController extends Controller
         ]);
 
 
-        // Store multiple images
         $images = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('public/storage/images');
+                $path = $image->store('public/images');
                 $images[] = basename($path);
             }
         }
 
-        // Create a new product
         $product = Product::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -116,7 +116,6 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-
         return view('products.edit', compact('product', 'categories'));
     }
 
@@ -129,7 +128,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // Set a default value for is_on_sale if the checkbox is not checked
         $request->merge(['is_on_sale' => $request->has('is_on_sale') ? 1 : 0]);
 
         $request->validate([
@@ -138,7 +136,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'sku' => 'required|unique:products,sku,' . $product->id,
             'stock_status' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image',
             'categories' => 'required|array',
             'is_on_sale' => 'boolean',
             'discount_percentage' => 'nullable|numeric|min:0|max:100',
@@ -146,7 +144,6 @@ class ProductController extends Controller
             'discount_end_date' => 'nullable|date'
         ]);
 
-        // Update images if new ones are uploaded
         $images = json_decode($product->images, true);
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -155,7 +152,6 @@ class ProductController extends Controller
             }
         }
 
-        // Update the product
         $product->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -188,76 +184,45 @@ class ProductController extends Controller
 
     public function bulkUpload(Request $request)
     {
-        // Validate that a file is uploaded
         $request->validate([
             'csv_file' => 'required|file|mimes:csv,txt',
         ]);
 
-        // Read the CSV file
         $path = $request->file('csv_file')->getRealPath();
         $csv = Reader::createFromPath($path, 'r');
-        $csv->setHeaderOffset(0);
+        $csv->setHeaderOffset(0); 
 
         $records = $csv->getRecords();
 
-        // Begin a database transaction
         DB::beginTransaction();
 
-        try {
-            foreach ($records as $record) {
-                // Validate the individual record fields
-                $validator = Validator::make($record, [
-                    'title' => 'required|string|max:255',
-                    'description' => 'nullable|string',
-                    'price' => 'required|numeric',
-                    'stock_status' => 'required|string',
-                    'sku' => 'required|string|max:255',
-                    'images' => 'nullable|string',
-                ]);
 
-                if ($validator->fails()) {
-                    continue; 
-                }
+        foreach ($records as $record) {
+            $validator = Validator::make($record, [
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'price' => 'required|numeric',
+                'stock_status' => 'required|string',
+                'sku' => 'required|string|max:255',
+            ]);
 
-                // Process each row in the CSV file
-                $product = new Product();
-
-                $product->title = $record['title'];
-                $product->description = $record['description'];
-                $product->price = $record['price'];
-                $product->stock_status = $record['stock_status'];
-                $product->sku = $record['sku'];
-
-                // Handle product images (if any)
-                $imagePaths = [];
-                if (!empty($record['images'])) {
-                    $images = explode(',', $record['images']);
-                    foreach ($images as $image) {
-                        $imagePath = 'images/' . Str::random(10) . '_' . trim($image);
-                        $fullImagePath = public_path('storage/images/' . trim($image));
-
-                        // Check if the image file exists
-                        if (file_exists($fullImagePath)) {
-                            Storage::disk('public')->put($imagePath, file_get_contents($fullImagePath));
-                            $imagePaths[] = $imagePath;
-                        } else {
-                            continue; 
-                        }
-                    }
-                }
-
-                $product->images = json_encode($imagePaths); 
-                $product->save();
+            if ($validator->fails()) {
+                continue; 
             }
 
-            DB::commit();
+            $product = new Product();
 
-            return redirect()->route('products.index')->with('success', 'Products uploaded successfully.');
-        } catch (\Exception $e) {
+            $product->title = $record['title'];
+            $product->description = $record['description'];
+            $product->price = $record['price'];
+            $product->stock_status = $record['stock_status'];
+            $product->sku = $record['sku'];
 
-            DB::rollback();
-
-            return redirect()->route('products.index')->with('error', 'An error occurred while uploading products: ' . $e->getMessage());
+            $product->save();
         }
+
+        DB::commit();
+
+        return redirect()->route('products.index')->with('success', 'Products uploaded successfully.');
     }
 }

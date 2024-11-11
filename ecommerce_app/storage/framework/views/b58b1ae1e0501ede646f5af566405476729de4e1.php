@@ -12,6 +12,7 @@
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </ul>
 </div>
+
 <?php endif; ?>
 <form action="<?php echo e(route('products.store')); ?>" method="POST" enctype="multipart/form-data" class="mb-4">
     <?php echo csrf_field(); ?>

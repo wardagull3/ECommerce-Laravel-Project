@@ -43,7 +43,6 @@ class ProductVariantController extends Controller
         'stock_level' => 'required|integer',
     ]);
 
-    // Create a new variant
     ProductVariant::create([
         'product_id' => $product->id,
         'size' => $request->size,
@@ -52,7 +51,6 @@ class ProductVariantController extends Controller
         'stock_level' => $request->stock_level,
     ]);
 
-    // Redirect to the product index page or variants index page
     return redirect()->route('products.index')->with('success', 'Variant added successfully.');
 }
 

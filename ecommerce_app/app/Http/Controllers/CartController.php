@@ -11,24 +11,21 @@ use App\Models\CartItem;
 class CartController extends Controller
 {
     public function index()
-{
-    $cartItems = Auth::user()->cartItems()->with('product')->get();
-    return view('customer.cart', compact('cartItems'));
-}
+    {
+        $cartItems = Auth::user()->cartItems()->with('product')->get();
+        return view('customer.cart', compact('cartItems'));
+    }
 
 
     public function add(Request $request, $productId)
     {
         $user = Auth::user();
 
-        // Check if the cart item already exists
         $cartItem = $user->cartItems->where('product_id', $productId)->first();
 
         if ($cartItem) {
-            // If the item is already in the cart, increment the quantity
             $cartItem->increment('quantity');
         } else {
-            // If it's a new item, create a new CartItem entry
             Cart::create([
                 'user_id' => $user->id,
                 'product_id' => $productId,
@@ -51,14 +48,20 @@ class CartController extends Controller
 
         $availableStock = $productVariant->stock_level;
 
-        $request->validate([
-            'quantity' => 'required|integer|min:1|max:' . $availableStock,
-        ], [
-            'quantity.max' => 'The quantity cannot exceed the available stock of ' . $availableStock,
-        ]);
-        
+        $request->validate(
+            [
+                'quantity' => 'required|integer|min:1|max:' . $availableStock,
+            ],
 
-        $cartItem->update(['quantity' => $request->quantity]);
+            [
+                'quantity.max' => 'The quantity cannot exceed the available stock of ' . $availableStock,
+            ]
+        );
+
+
+        $cartItem->update([
+            'quantity' => $request->quantity
+        ]);
 
         return redirect()->route('customer.cart.index')->with('success', 'Cart updated.');
     }

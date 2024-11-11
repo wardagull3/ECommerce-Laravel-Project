@@ -1,16 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <h1 class="mt-4 mb-4">Add New Product</h1>
 @if ($errors->any())
 <div class="alert alert-danger">
     <ul>
-        \end{code}
         @foreach ($errors->all() as $error)
-        \item {{ $error }}
+        {{ $error }}
         @endforeach
     </ul>
 </div>
+
 @endif
 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="mb-4">
     @csrf

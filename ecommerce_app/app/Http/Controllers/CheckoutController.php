@@ -35,18 +35,15 @@ class CheckoutController extends Controller
 
     $cartItems = Auth::user()->cartItems()->with('product')->get();
     $totalPrice = $cartItems->sum(function($item) {
-        // Check if the product is on sale and if the sale is valid
         $isOnSale = $item->product->is_on_sale && $item->product->discount_percentage > 0;
         $currentDate = now()->toDateString();
         $isOnSaleValid = $isOnSale && $currentDate >= $item->product->discount_start_date && $currentDate <= $item->product->discount_end_date;
 
-        // Calculate the discounted price if the product is on sale
         if ($isOnSaleValid) {
             $discountedPrice = $item->product->price - ($item->product->price * ($item->product->discount_percentage / 100));
             return $discountedPrice * $item->quantity;
         }
 
-        // Return the original price if the product is not on sale
         return $item->product->price * $item->quantity;
     });
 
@@ -60,7 +57,6 @@ class CheckoutController extends Controller
     $cartItems = $user->cartItems()->with('product')->get();
 
     $totalPrice = $cartItems->sum(function($item) {
-        // Apply the discount logic for order completion
         $isOnSale = $item->product->is_on_sale && $item->product->discount_percentage > 0;
         $currentDate = now()->toDateString();
         $isOnSaleValid = $isOnSale && $currentDate >= $item->product->discount_start_date && $currentDate <= $item->product->discount_end_date;
@@ -73,14 +69,12 @@ class CheckoutController extends Controller
         return $item->product->price * $item->quantity;
     });
 
-     // Create the order
      $order = Order::create([
         'user_id' => $user->id,
         'total_price' => $totalPrice,
         'status' => 'Pending',
     ]);
 
-    // Send order placed notification
     $order->user->notify(new OrderNotification($order, 'placed'));
 
     foreach ($cartItems as $cartItem) {
@@ -90,7 +84,6 @@ class CheckoutController extends Controller
             'price' => $cartItem->product->price, 
         ]);
 
-        // Deduct stock level
         $variant = $cartItem->product->latestVariant(); 
         if ($variant) {
             $variant->decrement('stock_level', $cartItem->quantity);
@@ -100,10 +93,7 @@ class CheckoutController extends Controller
             } 
         }
 
-
     }
-    
-
 
         Auth::user()->cartItems->each->delete();
         return redirect()->route('customer.products.index')->with('success', 'Order placed successfully!');

@@ -7,33 +7,85 @@
     <title>E-Commerce App</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Custom styles to make sidebar and content display side by side */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #fff !important;
+        }
+
+        .navbar-brand:hover,
+        .nav-link:hover {
+            color: #f1f1f1 !important;
+        }
+
         .sidebar {
             width: 250px;
-            /* Fixed width for sidebar */
+            background-color: #343a40;
+            min-height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            color: #adb5bd;
+        }
+
+        .sidebar h4 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar .nav-link {
+            color: #adb5bd;
+            padding: 10px 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+            color: #fff;
         }
 
         .content {
             margin-left: 250px;
-            /* Offset for content to the right of sidebar */
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+
+        .btn-link {
+            color: #adb5bd;
+        }
+
+        .btn-link:hover {
+            color: #495057;
+            text-decoration: none;
         }
     </style>
 </head>
 
-<body class="font-sans antialiased">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="{{ route('products.index') }}">E-Commerce</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 @auth
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('profile.edit') }}">Profile</a> <!-- Link to Profile -->
+                    <a class="nav-link" href="{{ route('profile.edit') }}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="nav-link btn btn-link" style="text-decoration: none;">Logout</button>
+                        <button type="submit" class="nav-link btn btn-link">Logout</button>
                     </form>
                 </li>
                 @else
@@ -48,14 +100,13 @@
         </div>
     </nav>
 
-    <div class="min-h-screen bg-gray-100 d-flex">
+    <div class="d-flex">
 
-        <!-- Sidebar -->
-        <nav class="bg-light p-3 sidebar">
+        <nav class="sidebar">
             <h4>Dashboard</h4>
             <ul class="nav flex-column">
                 @auth
-                @if(auth()->user()->isAdmin()) <!-- Check if the user is an admin -->
+                @if(auth()->user()->isAdmin())
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('products.index') }}">Products</a>
                 </li>
@@ -68,21 +119,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.lowStock') }}">Notifications</a>
                 </li>
-                
                 @else
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('customer.products.index') }}">View Products</a> <!-- Customer view products -->
+                    <a class="nav-link" href="{{ route('customer.products.index') }}">View Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('customer.orders') }}">Order History</a> <!-- Customer view products -->
+                    <a class="nav-link" href="{{ route('customer.orders') }}">Order History</a>
                 </li>
                 @endif
                 @endauth
-
             </ul>
         </nav>
 
-        <!-- Main Content Area -->
         <div class="container content">
             @yield('content')
         </div>
