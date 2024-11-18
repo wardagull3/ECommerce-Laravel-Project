@@ -1,6 +1,22 @@
 
 
 <?php $__env->startSection('content'); ?>
+
+<?php if(session('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo e(session('error')); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(session('success')): ?>
+    <div class="alert alert-success">
+        <?php echo e(session('success')); ?>
+
+    </div>
+<?php endif; ?>
+
+
 <h1 class="mt-4 mb-4">Edit Category</h1>
 
 <form action="<?php echo e(route('categories.update', $category->id)); ?>" method="POST">

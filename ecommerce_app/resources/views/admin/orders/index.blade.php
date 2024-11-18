@@ -23,7 +23,7 @@
                 <th>User</th>
                 <th>Total Price</th>
                 <th>Status</th>
-                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>

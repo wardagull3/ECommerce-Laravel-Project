@@ -33,6 +33,7 @@ class CheckoutController extends Controller
 {
     session(['payment_method' => $request->payment_method]);
 
+
     $cartItems = Auth::user()->cartItems()->with('product')->get();
     $totalPrice = $cartItems->sum(function($item) {
         $isOnSale = $item->product->is_on_sale && $item->product->discount_percentage > 0;
@@ -54,9 +55,9 @@ class CheckoutController extends Controller
     public function complete()
     {
         $user = Auth::user();
-    $cartItems = $user->cartItems()->with('product')->get();
+        $cartItems = $user->cartItems()->with('product')->get();
 
-    $totalPrice = $cartItems->sum(function($item) {
+        $totalPrice = $cartItems->sum(function($item) {
         $isOnSale = $item->product->is_on_sale && $item->product->discount_percentage > 0;
         $currentDate = now()->toDateString();
         $isOnSaleValid = $isOnSale && $currentDate >= $item->product->discount_start_date && $currentDate <= $item->product->discount_end_date;
@@ -92,9 +93,7 @@ class CheckoutController extends Controller
                 event(new LowStockDetected($cartItem->product));
             } 
         }
-
     }
-
         Auth::user()->cartItems->each->delete();
         return redirect()->route('customer.products.index')->with('success', 'Order placed successfully!');
     }

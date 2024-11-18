@@ -51,7 +51,6 @@
                     $currentDate = now()->toDateString();
                     $isOnSaleValid = $isOnSale && $currentDate >= $item->product->discount_start_date && $currentDate <= $item->product->discount_end_date;
 
-                        // Calculate the discounted price if the product is on sale
                         if ($isOnSaleValid) {
                         $discountedPrice = $item->product->price - ($item->product->price * ($item->product->discount_percentage / 100));
                         echo '$' . number_format($discountedPrice, 2);

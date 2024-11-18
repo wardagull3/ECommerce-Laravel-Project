@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->string('sku')->unique();
             $table->enum('stock_status', ['In Stock', 'Out of Stock']);
-            $table->json('images')->nullable();  // For multiple images
+            $table->json('images')->nullable();  
             $table->timestamps();
         });
     }

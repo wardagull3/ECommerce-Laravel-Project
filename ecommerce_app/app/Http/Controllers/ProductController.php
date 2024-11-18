@@ -144,6 +144,8 @@ class ProductController extends Controller
             'discount_end_date' => 'nullable|date'
         ]);
 
+        $images = [];
+        if ($request->hasFile('images')) {
         $images = json_decode($product->images, true);
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -151,6 +153,7 @@ class ProductController extends Controller
                 $images[] = basename($path);
             }
         }
+    }
 
         $product->update([
             'title' => $request->title,
@@ -191,7 +194,6 @@ class ProductController extends Controller
         $path = $request->file('csv_file')->getRealPath();
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0); 
-
         $records = $csv->getRecords();
 
         DB::beginTransaction();

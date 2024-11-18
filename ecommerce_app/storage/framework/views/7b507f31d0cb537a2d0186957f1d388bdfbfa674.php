@@ -38,7 +38,7 @@
 
     <form action="<?php echo e(route('customer.search')); ?>" method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" class="form-control" name="query" placeholder="Search by name, category, or keyword">
+            <input type="text" class="form-control" name="query" placeholder="Search by any keyword">
             <button class="btn btn-primary" type="submit">Search</button>
         </div>
     </form>
@@ -126,6 +126,8 @@
                             <button type="submit" class="btn btn-primary">Add to Cart</button>
                         </form>
                         <?php endif; ?>
+                        <a href="<?php echo e(route('customer.product.show', $product->id)); ?>" class="btn btn-secondary">View Details</a>
+
                 </div>
             </div>
         </div>

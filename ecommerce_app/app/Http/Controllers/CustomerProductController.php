@@ -18,6 +18,11 @@ class CustomerProductController extends Controller
         return view('customer.index', compact('products', 'categories')); 
     }
     
+    public function show($id)
+{
+    $product = Product::findOrFail($id);  
+    return view('customer.show', compact('product'));  
+}
 
     
 }

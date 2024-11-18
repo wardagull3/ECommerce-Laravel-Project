@@ -1,6 +1,21 @@
 
 
 <?php $__env->startSection('content'); ?>
+
+<?php if(session('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo e(session('error')); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(session('success')): ?>
+    <div class="alert alert-success">
+        <?php echo e(session('success')); ?>
+
+    </div>
+<?php endif; ?>
+
 <div class="container">
     <h2>Orders</h2>
     <table class="table">
@@ -10,7 +25,7 @@
                 <th>User</th>
                 <th>Total Price</th>
                 <th>Status</th>
-                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>

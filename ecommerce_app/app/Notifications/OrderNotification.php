@@ -49,8 +49,7 @@ class OrderNotification extends Notification implements ShouldQueue
             ->line('Your order has been ' . $this->type . ' successfully.')
             ->line('Order ID: ' . $this->order->id)
             ->line('Total Price: $' . $this->order->total_price)
-            ->line('Status: ' . ucfirst($this->order->status))
-            ->action('View Order', url('/customer/orders/' . $this->order->id));
+            ->line('Status: ' . ucfirst($this->order->status));
 
         return $message;
     }

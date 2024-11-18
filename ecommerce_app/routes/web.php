@@ -79,6 +79,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/customer/products', [CustomerProductController::class, 'index'])->name('customer.products.index');
+    Route::get('/product/{id}', [CustomerProductController::class, 'show'])->name('customer.product.show');
+
 
 
     Route::get('/cart', [CartController::class, 'index'])->name('customer.cart.index');

@@ -1,6 +1,21 @@
 
 
 <?php $__env->startSection('content'); ?>
+
+<?php if(session('error')): ?>
+    <div class="alert alert-danger">
+        <?php echo e(session('error')); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(session('success')): ?>
+    <div class="alert alert-success">
+        <?php echo e(session('success')); ?>
+
+    </div>
+<?php endif; ?>
+
 <h1 class="mt-4 mb-4">Category List</h1>
 
 <a href="<?php echo e(route('categories.create')); ?>" class="btn btn-primary mb-3">Add New Category</a>
